@@ -5,3 +5,8 @@ export type Restaurant = {
   avgRating: number;
   cloudinaryImageId: string;
 };
+
+
+export type RestaurantInfo = {
+  info: Restaurant;
+};
