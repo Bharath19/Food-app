@@ -1,19 +1,35 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import RestaurantCard from "./RestaurantCard";
-import { NRestaurantShimmerCard } from "@utils/shimmer/RestaurantShimmerCard";
 
-const RestaurantList = ({ restaurantData, error, loading }) => {
-  if (error) {
-    return <h1>Something went wrong, please try again later....................</h1>;
-  }
+export const RestaurantList = ({ data, hasNext, next }) => {
+  const observerTarget = useRef(null);
 
+  useEffect(() => {
+    const callbackFn = (entries: IntersectionObserverEntry[]) => {
+      if (entries.length === 0) return;
+      const rec = entries.at(entries.length - 1);
+      if (rec.isIntersecting) {
+        hasNext && next();
+      }
+    };
+
+    const option = { threshold: [0.1] };
+    const observer = new IntersectionObserver(callbackFn, option);
+    observerTarget.current && observer.observe(observerTarget.current);
+
+    return () => observer.disconnect();
+  }, [data]);
+
+  const restaurants = data?.length !== 0 ? data.slice(0, data.length - 1) : null;
+  const lastRestaurant: any = data?.length !== 0 ? data[data.length - 1] : null;
   return (
-    <div className="flex flex-wrap  mr-20 ml-20">
-      {loading && <NRestaurantShimmerCard count={24} />}
-      {!loading &&
-        restaurantData?.map((restaurant: any) => <RestaurantCard key={restaurant.info.id} {...restaurant.info} />)}
-    </div>
+    <>
+      {restaurants?.map((restaurant: any) => (
+        <RestaurantCard key={restaurant.info.id} {...restaurant.info} />
+      ))}
+      {lastRestaurant && (
+        <RestaurantCard key={lastRestaurant.info.id} {...lastRestaurant.info} observerTarget={observerTarget} />
+      )}
+    </>
   );
 };
-
-export default RestaurantList;

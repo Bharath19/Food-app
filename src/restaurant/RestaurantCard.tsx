@@ -1,18 +1,20 @@
-import React from "react";
+import React, { ForwardedRef, forwardRef } from "react";
 import { RestaurantImgURL } from "@utils/constant";
 import { Restaurant } from "@utils/interfaces/Restaurant";
 
-const RestaurantCard: React.FC<Restaurant> = ({ name, areaName, costForTwo, avgRating, cloudinaryImageId }) => {
+const RestaurantCard: React.FC<Restaurant & { observerTarget: any }> = (props) => {
+  const { name, areaName, costForTwo, avgRating, cloudinaryImageId, observerTarget } = props;
   const imageURL = `${RestaurantImgURL}${cloudinaryImageId}`;
   return (
-    <div className="p-4 w-72 h-96 rounded-md">
-      <div>
-        <img className="w-60 h-60 rounded-lg hover:rounded-none" src={imageURL} />
+    <div ref={observerTarget}>
+      <div className="relative h-[220.656px] w-[331px]">
+        <div className="absolute h-full w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
+          <img className="img-class h-full w-full object-cover rounded-xl" src={imageURL} />
+        </div>
       </div>
-      <div className="font-medium w-60 overflow-auto">{name}</div>
-      <div>{areaName}</div>
-      <div>{costForTwo}</div>
-      <div>{avgRating}</div>
+      <div className="font-medium w-80 overflow-auto">{name}</div>
+      <div className="text-gray-600">{areaName}</div>
+      <div className="text-gray-600">{costForTwo}</div>
     </div>
   );
 };
