@@ -3,7 +3,10 @@ import { defineConfig } from "vite";
 export default defineConfig({
   server: {
     proxy: {
-      "/dapi": "https://www.swiggy.com",
+      "/api": {
+        target: "https://www.swiggy.com",
+        changeOrigin: true,
+      },
     },
   },
   resolve: {

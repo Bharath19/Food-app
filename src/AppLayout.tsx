@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import RestaurantList from "./restaurant/RestaurantList";
-import useRestaurant from "@hooks/useRestaruent";
 import { RestaurantInfo } from "@utils/interfaces/Restaurant";
+import useRestaurant from "@hooks/useRestaruent";
 
 export const AppLayout = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const { restaurants, error, loading } = useRestaurant();
+  const { restaurants, next, error, hasNext, loading} = useRestaurant()!
 
-  const restaurantData: [] = restaurants?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
   let filteredData = [];
 
   // Debounce the search term using useEffect
@@ -21,19 +19,30 @@ export const AppLayout = () => {
 
   // filter
   filteredData = debouncedSearchTerm
-    ? restaurantData?.filter((restaurant: RestaurantInfo) => {
+    ? restaurants?.filter((restaurant: RestaurantInfo) => {
         const name = restaurant?.info?.name?.toLocaleLowerCase();
         return name.indexOf(debouncedSearchTerm.toLocaleLowerCase()) > -1;
       })
-    : restaurantData;
+    : restaurants;
 
   return (
     <>
       <Header searchHandler={setSearchTerm} />
       <main className="bg-gray-50">
-        <RestaurantList restaurantData={filteredData} error={error} loading={loading} />
+        <Restaurant restaurants={filteredData} error={error} loading={loading} next={next} hasNext={hasNext}/>
       </main>
       <Footer />
     </>
+  );
+};
+
+import React from "react";
+import Restaurant from "./restaurant/Restaurant";
+
+export const Content = () => {
+  return (
+    <main className="bg-gray-50 my-4">
+      <Restaurant />
+    </main>
   );
 };
