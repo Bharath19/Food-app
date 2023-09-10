@@ -1,25 +1,27 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { RestaurantListURL } from "@utils/constant";
+import { MAX_INFINITE_SCROLL, RestaurantListURL } from "@utils/constant";
+import { fetchDataFromAPI } from "./api";
 
 const useRestaurant = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [nextOffset, setNextOffer] = useState("1");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [scrollCount, setScrollCount] = useState(0);
+  const shouldInfiniteScroll = scrollCount < MAX_INFINITE_SCROLL;
 
-  const getRestaruent = async () => {
+  const getRestaruent = async (manualRequest = false) => {
     setLoading(true);
     try {
-      const response = await fetch(RestaurantListURL, {
-        body: `{"seoParams":{"apiName":"CityPage"},"widgetOffset":{"collectionV5RestaurantListWidget_SimRestoRelevance_food_seo":"${nextOffset}"}}`,
-        method: "POST",
-      });
-      const json = await response.json();
-      const restaurants = json?.data?.success?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-      const offset =
-        json?.data?.success?.pageOffset?.widgetOffset?.collectionV5RestaurantListWidget_SimRestoRelevance_food_seo;
-      setRestaurants((preData) => [...preData, ...restaurants]);
-      setNextOffer(offset);
+      if (shouldInfiniteScroll || manualRequest) {
+        const { restaurants, offset } = await fetchDataFromAPI(nextOffset);
+        setRestaurants((preData) => [...preData, ...restaurants]);
+        setNextOffer(offset);
+
+        setScrollCount((prevScrollCount) => prevScrollCount + 1);
+      } else {
+        console.log("Maximum scroll limit reached");
+      }
     } catch (error) {
       setError("Error while getting the Restaruent, Please try again later");
     } finally {
@@ -32,10 +34,13 @@ const useRestaurant = () => {
   }, []);
 
   const hasNext = !!nextOffset;
-  const next = useCallback(() => {
-    console.log("Get next record");
-    getRestaruent();
-  }, [nextOffset]);
+  const next = useCallback(
+    (manualRequest = false) => {
+      console.log("Get next record");
+      getRestaruent(manualRequest);
+    },
+    [nextOffset]
+  );
   return { restaurants, loading, hasNext, next, error };
 };
 
