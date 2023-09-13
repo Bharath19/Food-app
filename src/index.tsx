@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { AppLayout } from './AppLayout';
+import { RouterProvider } from "react-router-dom";
+import { routes } from './routes';
 
-const rootDom = document.getElementById('root')!;
-const root = createRoot(rootDom);
-root.render(<AppLayout />);
+const root = createRoot(document.getElementById("root")!);
+root.render(<RouterProvider router={routes} />);

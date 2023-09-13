@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SearchBox = ({ searchHandler }) => {
+const SearchBox = (props: { searchHandler: (arg0: string) => void; }) => {
   return (
     <>
       <span className="text-gray-400">
@@ -20,7 +20,8 @@ const SearchBox = ({ searchHandler }) => {
         </svg>
       </span>
       <input
-        onChange={(e) => searchHandler(e.target.value)}
+        type='search'
+        onChange={(e) => props.searchHandler(e.target.value)}
         className="outline-none p-3 w-96 rounded-2xl shadow-sm bg focus:border"
         placeholder="Search for the restaurants"
       />
