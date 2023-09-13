@@ -1,7 +1,7 @@
 import React from "react";
 import SearchBox from "./SearchBox";
 
-export const Header = (props) => {
+export const Header = (props: { searchHandler: any; }) => {
   return (
     <div className="flex justify-between items-center mb-2 shadow-lg border-b-pink-300">
       <a href="/">

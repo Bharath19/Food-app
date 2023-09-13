@@ -1,7 +1,7 @@
 import { RestaurantListURL } from "@utils/constant";
 
 const fetchData = async (apiEndpoint: string) => {
-  let cachedData = JSON.parse(localStorage.getItem(apiEndpoint));
+  let cachedData = JSON.parse(localStorage.getItem(apiEndpoint)!);
 
   if (!cachedData) {
     const response = await fetch(apiEndpoint);
@@ -13,8 +13,8 @@ const fetchData = async (apiEndpoint: string) => {
   return cachedData;
 };
 
-export const fetchDataFromAPI = async (nextOffset) => {
-  let cachedData = JSON.parse(localStorage.getItem(RestaurantListURL+nextOffset));
+export const fetchDataFromAPI = async (nextOffset: string) => {
+  let cachedData = JSON.parse(localStorage.getItem(RestaurantListURL+nextOffset)!);
   if (cachedData) {
     return cachedData;
   }
