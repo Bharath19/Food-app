@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import RestaurantCard from "./RestaurantCard";
 
-export const RestaurantList = ({ data, hasNext, next }) => {
+export const RestaurantList = ({ data, hasNext, next }: any) => {
   const observerTarget = useRef(null);
 
   useEffect(() => {
     const callbackFn = (entries: IntersectionObserverEntry[]) => {
       if (entries.length === 0) return;
       const rec = entries.at(entries.length - 1);
-      if (rec.isIntersecting) {
+      if (rec && rec.isIntersecting) {
         hasNext && next();
       }
     };
@@ -24,11 +24,16 @@ export const RestaurantList = ({ data, hasNext, next }) => {
   const lastRestaurant: any = data?.length !== 0 ? data[data.length - 1] : null;
   return (
     <>
-      {restaurants?.map((restaurant: any) => (
-        <RestaurantCard key={restaurant.info.id} {...restaurant.info} />
+      {restaurants?.map((restaurant: any, index: number) => (
+        <RestaurantCard key={restaurant.info.id + index} {...restaurant.info} link={restaurant.cta.link} />
       ))}
       {lastRestaurant && (
-        <RestaurantCard key={lastRestaurant.info.id} {...lastRestaurant.info} observerTarget={observerTarget} />
+        <RestaurantCard
+          key={lastRestaurant.info.id}
+          {...lastRestaurant.info}
+          link={lastRestaurant.cta.link}
+          observerTarget={observerTarget}
+        />
       )}
     </>
   );

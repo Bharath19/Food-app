@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { MAX_INFINITE_SCROLL, RestaurantListURL } from "@utils/constant";
+import { useCallback, useEffect, useState } from "react";
+import { MAX_INFINITE_SCROLL } from "@utils/constant";
 import { fetchDataFromAPI } from "./api";
+import { RestaurantInfoType } from "@utils/interfaces/Restaurant";
 
 const useRestaurant = () => {
-  const [restaurants, setRestaurants] = useState([]);
+  const [restaurants, setRestaurants] = useState<RestaurantInfoType[]>([]);
   const [nextOffset, setNextOffer] = useState("1");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,7 @@ const useRestaurant = () => {
         console.log("Maximum scroll limit reached");
       }
     } catch (error) {
+      console.error(error);
       setError("Error while getting the Restaruent, Please try again later");
     } finally {
       setLoading(false);
@@ -37,7 +39,7 @@ const useRestaurant = () => {
   const next = useCallback(
     (manualRequest = false) => {
       console.log("Get next record");
-      getRestaruent(manualRequest);
+      hasNext && getRestaruent(manualRequest);
     },
     [nextOffset]
   );

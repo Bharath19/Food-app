@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import Restaurant from "./restaurant/Restaurant";
-import { RestaurantInfo } from "@utils/interfaces/Restaurant";
+import { RestaurantInfoType } from "@utils/interfaces/Restaurant";
 import useRestaurant from "@hooks/useRestaruent";
 
 export const AppLayout = () => {
@@ -20,7 +20,7 @@ export const AppLayout = () => {
 
   // filter
   filteredData = debouncedSearchTerm
-    ? restaurants?.filter((restaurant: RestaurantInfo) => {
+    ? restaurants?.filter((restaurant: RestaurantInfoType) => {
         const name = restaurant?.info?.name?.toLocaleLowerCase();
         return name.indexOf(debouncedSearchTerm.toLocaleLowerCase()) > -1;
       })

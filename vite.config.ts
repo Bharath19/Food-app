@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
 import path from "path";
+import react from "@vitejs/plugin-react-swc";
 
 export default defineConfig({
   plugins: [react()],
@@ -14,9 +14,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@components": "/src/components",
-      "@utils": "/src/utils",
-      "@hooks": "/src/hooks",
+      "@": path.resolve(__dirname, "./src"),
+      "@components": path.resolve(__dirname, "./src/components"),
+      "@utils": path.resolve(__dirname, "./src/utils"),
+      "@hooks": path.resolve(__dirname, "./src/hooks"),
     },
   },
 });
