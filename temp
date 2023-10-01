@@ -1,0 +1,61 @@
+
+// Define the URL
+const url = 'https://www.swiggy.com/restaurants/kannur-food-kitchen-1st-stage-btm-layout-bangalore-337335';
+// Fetch the HTML content from the URL
+fetch(url)
+  .then(response => response.text())
+  .then(html => {
+    // Use regular expressions to find and extract the JSON object
+    const initDataMatch = html.match(/window\.___INITIAL_STATE__ = (\{.*?\});/);
+
+    if (initDataMatch) {
+      const initDataJson = JSON.parse(initDataMatch[1]);
+      
+      // Now you can access the JSON object in initDataJson
+      console.log(initDataJson);
+    } else {
+      console.log("Could not find the 'window.___INITIAL_STATE__' JSON object.");
+    }
+  })
+  .catch(error => {
+    console.error("Error fetching data:", error);
+  });
+
+
+
+const apiUrl = 'https://www.swiggy.com/api/seo/getListing?lat=12.9715987&lng=77.5945627';
+var result1 = [];
+async function makeApiCalls() {
+  let totalCalls = 0;
+  let nextOffset = 1;
+
+  while (totalCalls < 2) {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      body: `{"seoParams":{"apiName":"CityPage"},"widgetOffset":{"collectionV5RestaurantListWidget_SimRestoRelevance_food_seo":"${nextOffset}"}}`,
+    });
+
+    const json = await response.json();
+    const restaurants = json?.data?.success?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+    nextOffset = json?.data?.success?.pageOffset?.widgetOffset?.collectionV5RestaurantListWidget_SimRestoRelevance_food_seo;
+
+    // Save the response to a JSON file
+    result1 = [...result1, ...restaurants.map(r => r.info)];
+
+    totalCalls++;
+
+    await new Promise( (reslove) => setTimeout(reslove, 5 * 1000));
+    if (!nextOffset) {
+      console.log('Reached the end of data.');
+      break;
+    }
+  }
+}
+
+makeApiCalls()
+  .then(() => {
+    console.log('API calls and file saving complete.');
+  })
+  .catch((error) => {
+    console.error('An error occurred:', error);
+  });

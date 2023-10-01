@@ -1,18 +1,5 @@
 import { RESTAURANT_LIST_URL, RESTAURANT_TYPE_KEY } from "@utils/constant";
 
-const fetchData = async (apiEndpoint: string) => {
-  let cachedData = JSON.parse(localStorage.getItem(apiEndpoint)!);
-
-  if (!cachedData) {
-    const response = await fetch(apiEndpoint);
-    const data = await response.json();
-    localStorage.setItem(apiEndpoint, JSON.stringify(data));
-    return data;
-  }
-
-  return cachedData;
-};
-
 const checkJsonData = (jsonData: any) => {
   for (let i = 0; i < jsonData?.data?.success?.cards?.length; i++) {
     if (jsonData?.data?.success?.cards[i]?.card?.card["@type"] === RESTAURANT_TYPE_KEY) {
