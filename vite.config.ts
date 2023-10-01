@@ -10,6 +10,10 @@ export default defineConfig({
         target: "https://www.swiggy.com",
         changeOrigin: true,
       },
+      "/dapi": {
+        target: "https://www.swiggy.com",
+        changeOrigin: true,
+      },
     },
   },
   resolve: {

@@ -25,13 +25,13 @@ export const RestaurantList = ({ data, hasNext, next }: any) => {
   return (
     <>
       {restaurants?.map((restaurant: any, index: number) => (
-        <RestaurantCard key={restaurant.info.id + index} {...restaurant.info} link={restaurant.cta.link} />
+        <RestaurantCard key={restaurant.info.id + index} id={restaurant.info.id} {...restaurant.info} />
       ))}
       {lastRestaurant && (
         <RestaurantCard
           key={lastRestaurant.info.id}
+          id={lastRestaurant.info.id}
           {...lastRestaurant.info}
-          link={lastRestaurant.cta.link}
           observerTarget={observerTarget}
         />
       )}

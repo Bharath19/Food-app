@@ -1,10 +1,10 @@
 export type RestaurantType = {
+  id: number;
   name: string;
   areaName: string;
   costForTwo: string;
   avgRating: number;
   cloudinaryImageId: string;
-  link: string;
 };
 
 export type RestaurantInfoType = {
